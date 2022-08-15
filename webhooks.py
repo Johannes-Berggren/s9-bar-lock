@@ -2,28 +2,34 @@ import RPi.GPIO as GPIO
 import time
 from bottle import route, run, template
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(3, GPIO.OUT)
-GPIO.output(3, False)   
+from gpiozero import Servo
+from time import sleep
 
-@route('/LED/:ledstate')
-def ledtrigger(ledstate=0):
-    if ledstate == '0':
-        GPIO.output(3, False)
-        return 'LED OFF'
-    elif ledstate == '1':
-        GPIO.output(3, True)
-        return 'LED ON'
+servo = Servo(25)
+
+# GPIO.setmode(GPIO.BOARD)
+# GPIO.setup(3, GPIO.OUT)
+# GPIO.output(3, False)   
     
 @route('/LOCK/:lockstate')
 def locktrigger(lockstate=0):
     if lockstate == '0':
         GPIO.output(3, False)
+        
         # CLOSE LOCK
-        return 'LED OFF'
+        
+        return 'LOCK CLOSED'
     elif lockstate == '1':
         GPIO.output(3, True)
-        # OPEN LOCK
-        return 'LED ON'
+        
+        # SERVO
+        servo.min()
+        sleep(0.5)
+        servo.mid()
+        sleep(0.5)
+        servo.max()
+        sleep(0.5)
+        
+        return 'LOCK OPEN'
 
 run(host='192.168.50.149', port=8081)
