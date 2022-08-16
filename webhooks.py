@@ -19,15 +19,17 @@ def locktrigger(lockstate=0):
         # GPIO.output(3, False)
         
         # CLOSE LOCK
-        pi.set_servo_pulsewidth(25, 500)
+        pi.set_servo_pulsewidth(23, 500)
+        pi.set_servo_pulsewidth(24, 500)
         
         return 'LOCK CLOSED'
     elif lockstate == '1':
         # GPIO.output(3, True)
         
         # OPEN LOCK
-        pi.set_servo_pulsewidth(25, 2500)
+        pi.set_servo_pulsewidth(23, 2500)
+        pi.set_servo_pulsewidth(24, 2500)
         
         return 'LOCK OPEN'
 
-run(host='192.168.50.149', port=8081)
+run(host='192.168.50.119', port=8081)
