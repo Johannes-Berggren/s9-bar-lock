@@ -1,11 +1,13 @@
 import RPi.GPIO as GPIO
 import time
 from bottle import route, run, template
+import pigpio
 
-from gpiozero import Servo
+#from gpiozero import Servo
 from time import sleep
 
-servo = Servo(25)
+pi = pigpio.pi()
+#servo = Servo(25)
 
 # GPIO.setmode(GPIO.BOARD)
 # GPIO.setup(3, GPIO.OUT)
@@ -14,21 +16,17 @@ servo = Servo(25)
 @route('/LOCK/:lockstate')
 def locktrigger(lockstate=0):
     if lockstate == '0':
-        GPIO.output(3, False)
+        # GPIO.output(3, False)
         
         # CLOSE LOCK
+        pi.set_servo_pulsewidth(25, 500)
         
         return 'LOCK CLOSED'
     elif lockstate == '1':
-        GPIO.output(3, True)
+        # GPIO.output(3, True)
         
-        # SERVO
-        servo.min()
-        sleep(0.5)
-        servo.mid()
-        sleep(0.5)
-        servo.max()
-        sleep(0.5)
+        # OPEN LOCK
+        pi.set_servo_pulsewidth(25, 2500)
         
         return 'LOCK OPEN'
 
